@@ -380,22 +380,33 @@ st.markdown(
 )
 
 st.markdown('<div class="question-panel">', unsafe_allow_html=True)
-st.markdown(
-    """
-    <div class="question-chips">
-        <span class="chip">Headache</span>
-        <span class="chip">Hydration</span>
-        <span class="chip">Sleep</span>
-        <span class="chip">Nutrition</span>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+
+suggested_questions = [
+    "What are the signs of dehydration?",
+    "How can I improve my sleep quality?",
+    "What foods help boost immunity?",
+    "When should I worry about a headache?",
+    "How can I manage a fever at home?",
+    "What should I do for body pain or muscle soreness?",
+]
+
+if "question_text" not in st.session_state:
+    st.session_state.question_text = ""
+
+st.caption("Suggested questions")
+button_cols = st.columns(3)
+for index, question_text in enumerate(suggested_questions):
+    with button_cols[index % 3]:
+        if st.button(question_text, key=f"suggestion_{index}", use_container_width=True):
+            st.session_state.question_text = question_text
+
 question = st.text_area(
     "Ask your health-related question",
+    value=st.session_state.question_text,
     placeholder="Example: What are the signs of dehydration or how can I improve my sleep routine?",
     height=140,
 )
+st.session_state.question_text = question
 
 if st.button("Get Guidance", use_container_width=True):
     if question.strip():
